@@ -94,10 +94,4 @@
         </plugins>
     </build>
 </project>
-```
 
----
-
-Now share your `application.properties` file so I can give you the exact production-ready version. It's at:
-```
-F:\socialmedia\src\main\resources\application.properties
