@@ -25,9 +25,6 @@ public class UserServiceImpl implements UserService {
         this.followRepository = followRepository;
     }
 
-    // ----------------------------------------------------------------
-    // Get user by ID
-    // ----------------------------------------------------------------
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserById(Long userId) {
@@ -36,9 +33,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(user, null);
     }
 
-    // ----------------------------------------------------------------
-    // Get user by username
-    // ----------------------------------------------------------------
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username, Long currentUserId) {
@@ -47,9 +41,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(user, currentUserId);
     }
 
-    // ----------------------------------------------------------------
-    // Update profile
-    // ----------------------------------------------------------------
     @Override
     public UserResponse updateProfile(Long userId, UpdateProfileRequest request) {
         User user = userRepository.findById(userId)
@@ -66,9 +57,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(updated, null);
     }
 
-    // ----------------------------------------------------------------
-    // Follow user
-    // ----------------------------------------------------------------
     @Override
     public void followUser(Long followerId, Long followeeId) {
         if (followerId.equals(followeeId)) {
@@ -90,9 +78,6 @@ public class UserServiceImpl implements UserService {
         followRepository.save(follow);
     }
 
-    // ----------------------------------------------------------------
-    // Unfollow user
-    // ----------------------------------------------------------------
     @Override
     public void unfollowUser(Long followerId, Long followeeId) {
         Follow follow = followRepository
@@ -102,18 +87,12 @@ public class UserServiceImpl implements UserService {
         followRepository.delete(follow);
     }
 
-    // ----------------------------------------------------------------
-    // Check follow status
-    // ----------------------------------------------------------------
     @Override
     @Transactional(readOnly = true)
     public boolean isFollowing(Long followerId, Long followeeId) {
         return followRepository.existsByFollowerIdAndFolloweeId(followerId, followeeId);
     }
 
-    // ----------------------------------------------------------------
-    // Helper: map User → UserResponse
-    // ----------------------------------------------------------------
     private UserResponse mapToResponse(User user, Long currentUserId) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
@@ -123,14 +102,11 @@ public class UserServiceImpl implements UserService {
         response.setProfilePictureUrl(user.getProfilePictureUrl());
         response.setCreatedAt(user.getCreatedAt());
 
-        // Follower / following counts
         response.setFollowersCount(followRepository.countByFolloweeId(user.getId()));
         response.setFollowingCount(followRepository.countByFollowerId(user.getId()));
 
-        // Post count — use size of posts list if available
         response.setPostsCount(user.getPosts() != null ? user.getPosts().size() : 0);
 
-        // Is current user following this user
         if (currentUserId != null && !currentUserId.equals(user.getId())) {
             response.setFollowedByCurrentUser(
                 followRepository.existsByFollowerIdAndFolloweeId(currentUserId, user.getId())
@@ -139,10 +115,4 @@ public class UserServiceImpl implements UserService {
 
         return response;
     }
-
-	@Override
-	public UserResponse getUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
