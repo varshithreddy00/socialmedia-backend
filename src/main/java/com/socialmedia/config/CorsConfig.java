@@ -15,10 +15,7 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "https://socialmedia-frontend-8umb.onrender.com"
-        ));
+        config.setAllowedOrigins(List.of("https://socialmedia-frontend-8umb.onrender.com"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
